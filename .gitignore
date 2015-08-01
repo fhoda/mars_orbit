@@ -41,3 +41,20 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+application.windows64/java/lib/zi/SystemV/EST5
+*.jar
+*.exe
+*.java
+*.dll
+*.cpl
+*.txt
+application.windows64/java/COPYRIGHT
+*.properties
+*.ttf
+*.gif
+application.windows32/source/mars_orbit.pde
+*.cfg
+*.pf
+*.zip
+application.windows64/source/mars_orbit.pde
+*.jfc
