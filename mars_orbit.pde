@@ -2,14 +2,15 @@
 *  Kepler - Tycho Brache Data Plot for Mars Obrbit
 */
 
+int size = 900;
 String legend = "White: Earth Obrit /n Red: Mars Orbit";  
-float center = 500; // Center of drawing
-float orbitalDiameter = 200; // radius of Earth's orbit
+float center = size/2; // Center of drawing
+float orbitalDiameter = 250; // radius of Earth's orbit
 float orbitalRadius = orbitalDiameter/2;
 float sunRadius = 20;
 
 void setup(){
-  size(1000,1000);
+  size(size,size);
   background(0,0,0);
 //  frameRate(1);
 //  noLoop();
@@ -18,7 +19,7 @@ void setup(){
 
 void draw(){
 //  ellipseMode(CENTER);
-  // Draw Earth's orbial 
+  // Draw Earth's orbital 
   fill(0);
   stroke(255);
   ellipse(center,center,orbitalDiameter,orbitalDiameter); //Earth's Orbital
@@ -39,21 +40,21 @@ void draw(){
   plotEarth(92.5, 48.0, 92.5, 130.5, orbitalRadius, center); // 9
 //  plotEarth(277.0, 235.0, 208.5, 272.5, orbitalRadius, center); // 10
 //  plotEarth(308.0, 266.5, 260.5, 335.0, orbitalRadius, center); // 11
-//  plotEarth(345.5, 304.0, 273.0, 247.5, orbitalRadius, center); // 12
+//  plotEarth(345.5, 304.0, 273.0, 347.5, orbitalRadius, center); // 12
 //  plotEarth(9.5, 327.0, 337.5, 44.5, orbitalRadius, center); // 13
 //  plotEarth(60.5, 17.0, 350.5, 56.0, orbitalRadius, center); // 14 
 }
 
-
+/* Calculates and plots both positions for Earth given a data set */
 void plotEarth(float angle1, float angle2, float marsAngle1, float marsAngle2, float radius, float origin){
-  
+  // First Earth position
   float x1 = origin + radius*cos(radians(angle1));
   float y1 = origin + radius*sin(radians(angle1+180));
   fill(0,76,153);
   stroke(0,76,153);
   ellipse(x1,y1,15,15);
   
-  
+  // Second Earth Position
   float x2 = origin + radius*cos(radians(angle2));
   float y2 = origin + radius*sin(radians(angle2+180));
   fill(0,76,153);
@@ -63,36 +64,37 @@ void plotEarth(float angle1, float angle2, float marsAngle1, float marsAngle2, f
   plotMars(origin, x1, y1, x2, y2, angle1, angle2 ,marsAngle1, marsAngle2);
 }
 
+/* Calculates and plots Mars Postion based on both earth positions given and Mars angle from Earth Position 2 */
 void plotMars(float o, float xE1, float yE1, float xE2, float yE2, float angleE1,float angleE2,float angleM1, float angleM2){
   stroke(255); 
   // Line from Sun to Earth
   line(o, o, xE1, yE1);
   
-  // Calulate equation of the line from Sun through Earth to x-axis
+  // Calulate equation of the line from Sun to Earth
   float slope = (yE1 - o)/(xE1 - o); // slope (m)
-  float b = o - (slope*o);           // b
+  float b = o - (slope*o);           // y-intercept
 //  float xIntercept = -b/slope;       // x-intercept
 //  line(o,o, xIntercept, 0);
   
-  /* Calculate/Triangulate distnace on Sun-Earth Line using Known angles lengths */
+  /* Calculate/Triangulate distance on Sun-Earth Line using Known angles and lengths */
   // Get all angles
-  float sunAngle = angleE1 - angleE2;
-  float earthAngle = 180-angleM2;
-  float intersectionAngle = 180-sunAngle-earthAngle;
-  println(sunAngle + "\n" + earthAngle +"\n"+ intersectionAngle );
+  float sunAngle = abs(angleE1 - angleE2);
+  float earthAngle = abs(180-(angleM2-angleE2));
+  float intersectionAngle = abs(180-sunAngle-earthAngle);
+  println("Sun Angle: "  + sunAngle + "\nEarth Angle: " + earthAngle +"\nInt Angle: "+ intersectionAngle );
   
   // Get distance from 2nd earth point to line.
   float side = orbitalDiameter;
   
-  // Calculate distance on line for Mars' location
+  // Calculate distance on Sun-Earth line for Mars' location
   float distance;
-  if(angleE1 > 90 && angleE1 < 270){
+  if((angleE1 > 90 && angleE1 < 360)){
     distance = -(side * sin(radians(earthAngle)))/sin(radians(intersectionAngle));
   }else{
     distance = (side * sin(radians(earthAngle)))/sin(radians(intersectionAngle));
   }
 
-  println(distance);
+  println("Distance: " + distance);
   
   // Calculate Mars plot position given distance
   float xM = o + distance/sqrt(1+sq(slope)); // x value
