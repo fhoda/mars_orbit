@@ -10,3 +10,4 @@
 !*/
 application.windows32/source/mars_orbit.pde
 application.windows64/source/mars_orbit.pde
+*.properties
