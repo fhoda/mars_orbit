@@ -37,7 +37,7 @@ void draw() {
   stroke(255, 255, 0);
   ellipse(center, center, sunRadius, sunRadius); // Sun
 
-  // plotEarth(47.5, 4.0, 47.5, 90.0, orbitalRadius, center); // 8
+  plotEarth(47.5, 4.0, 47.5, 90.0001, orbitalRadius, center);  // 8 
 
   plotEarth(66.5, 22.5, 66.5, 107.0, orbitalRadius, center);  // 1
 
@@ -46,16 +46,13 @@ void draw() {
   plotEarth(107.0, 62.5, 107.0, 144.0, orbitalRadius, center); // 2
   plotEarth(141.5, 97.5, 141.5, 177.0, orbitalRadius, center); // 3
   plotEarth(175.5, 132.0, 175.5, 212.0, orbitalRadius, center); // 4
-
   plotEarth(214.5, 171.5, 214.5, 253.5, orbitalRadius, center); // 5
 
   plotEarth(277.0, 235.0, 208.5, 272.5, orbitalRadius, center); // 10
 
-
   plotEarth(266.5, 225.0, 266.5, 311.0, orbitalRadius, center); // 6
 
   plotEarth(308.0, 266.5, 260.5, 335.0, orbitalRadius, center); // 11
-
   plotEarth(345.5, 304.0, 273.0, 347.5, orbitalRadius, center); // 12
 
   plotEarth(342.5, 300.5, 342.5, 29.5, orbitalRadius, center); // 7  
@@ -98,6 +95,7 @@ void plotEarth(float angle1, float angle2, float marsAngle1, float marsAngle2, f
   stroke(0, 76, 153);
   ellipse(x2, y2, earthRadius, earthRadius);
 
+  println("Eart 1: " + x1 + "," + y1 + "\n" + "Earth 2: " + x2 + "," + y2);
   plotMars(origin, x1, y1, x2, y2, angle1, angle2, marsAngle1, marsAngle2);
 }
 
@@ -164,7 +162,7 @@ void plotMars(float o, float xE1, float yE1, float xE2, float yE2, float angleE1
   float xM = (b2 - b1)/(slope1 - slope2);
   float yM = slope1*xM + b1;
 
-  println(xM + "," + yM);
+  // println(xM + "," + yM);
 
   fill(165, 0, 0);
   stroke(165, 0, 0);
