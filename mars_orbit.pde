@@ -47,12 +47,11 @@ String[][] dates = {
                     {"11/23/1593","10/10/1595"}
                   };              
                   
-int[] curveOrder = {8,1,9,2,3,4,5,10,6,11,12,7,13,13,14};
+int[] curveOrder = {8,1,9,2,3,4,5,10,6,11,12,7,13,14};
 
 FloatList marsCoords = new FloatList(); // Store mars coordinates
 
 void setup() {
-  // int canvas_size = displayHeight - 100;
   size(displayWidth-100, displayHeight-100);
   centerX = displayWidth/2; 
   centerY = displayHeight/2; // Center of drawing
@@ -80,7 +79,7 @@ void draw() {
   
   printData();
   
-//  drawCurve();
+  drawCurve();
 
   endRecord(); // Finish writing to PDF file
 }
@@ -123,30 +122,6 @@ void plotEarth() {
     println("Eart "+plotNumber+".1 : " + x1 + "," + y1 + "\n" + "Earth "+plotNumber+".2: " + x2 + "," + y2);
     plotMars(x1, y1, x2, y2, angle1, angle2, marsAngle1, marsAngle2, plotNumber);    
   }
-}
-
-
-void drawCurve(){
-  // Draw Curve connecting mars plots
-  noFill();
-  stroke(0);
-  beginShape();
-  
-  int curveX = curveOrder[0]+(curveOrder[0]-1)-1;
-  int curveY = curveOrder[0]+(curveOrder[0]-1);
-  int curveEndX = curveX;
-  int curveEndY = curveY;
-  curveVertex(marsCoords.get(curveX), marsCoords.get(curveY));
-  int i; 
-  for (i=1; i<=curveOrder.length; i++) {
-    curveX = curveOrder[i]+(curveOrder[i]-1)-1;
-    curveY = curveOrder[i]+(curveOrder[i]-1);
-    curveVertex(marsCoords.get(curveOrder[i]+1), marsCoords.get(curveOrder[i]+2));
-  }  
-  curveVertex(marsCoords.get(curveEndX), marsCoords.get(curveEndY));
-  curveVertex(marsCoords.get(curveEndX), marsCoords.get(curveEndY));
-
-  endShape();
 }
 
 void printPlotNumber(int plot,float x, float y, String planet){
@@ -239,5 +214,30 @@ void plotMars(float xE1, float yE1, float xE2, float yE2, float angleE1, float a
   // Add Coordinates to array for connecting eath position with a curve.
   marsCoords.append(xM); 
   marsCoords.append(yM);
+}
+
+void drawCurve(){
+  // Draw Curve connecting mars plots
+  noFill();
+  stroke(0);
+  beginShape();
+  
+  int curveEndX = curveOrder[0]+(curveOrder[0]-1)-1;
+  int curveEndY = curveOrder[0]+(curveOrder[0]-1);
+
+  curveVertex(marsCoords.get(curveEndX), marsCoords.get(curveEndY));
+  int i; 
+  for (i=0; i<curveOrder.length; i++) {
+    print(i+ " ");
+    int curveX = curveOrder[i]+(curveOrder[i]-1)-1;
+    print(curveX + " ");
+    int curveY = curveOrder[i]+(curveOrder[i]-1);
+    println(curveY);
+    curveVertex(marsCoords.get(curveX), marsCoords.get(curveY));
+  }  
+  curveVertex(marsCoords.get(curveEndX), marsCoords.get(curveEndY));
+  curveVertex(marsCoords.get(curveEndX), marsCoords.get(curveEndY));
+
+  endShape();
 }
 
