@@ -80,7 +80,7 @@ void draw() {
   
   printData();
   
-  drawCurve();
+//  drawCurve();
 
   endRecord(); // Finish writing to PDF file
 }
@@ -106,7 +106,7 @@ void plotEarth() {
     ellipse(x1, y1, earthRadius, earthRadius);
   
     // Display First Earth Point number from Kepler's data
-    printPlotNumber(plotNumber, x1, y1, "earth");
+    printPlotNumber(plotNumber, x1, y1, "earth1");
 
   
     // Second Earth Position
@@ -117,7 +117,7 @@ void plotEarth() {
     ellipse(x2, y2, earthRadius, earthRadius);
       
     // Display Second Earth Point number from Kepler's data
-    printPlotNumber(plotNumber, x2, y2, "earth");
+    printPlotNumber(plotNumber, x2, y2, "earth2");
 
   
     println("Eart "+plotNumber+".1 : " + x1 + "," + y1 + "\n" + "Earth "+plotNumber+".2: " + x2 + "," + y2);
@@ -150,7 +150,7 @@ void drawCurve(){
 }
 
 void printPlotNumber(int plot,float x, float y, String planet){
-  if(planet=="earth"){
+  if(planet=="earth1"){
     if (x>centerX && y<centerY) {
         text(plot+".1", x+text_distance, y);
       } else if (x<centerX && y<centerY) {
@@ -159,6 +159,16 @@ void printPlotNumber(int plot,float x, float y, String planet){
         text(plot+".1", x-text_distance-25, y+text_distance);
       } else {
         text(plot+".1", x+text_distance, y+text_distance);
+      } 
+  }else if(planet=="earth2"){
+    if (x>centerX && y<centerY) {
+        text(plot+".2", x+text_distance, y);
+      } else if (x<centerX && y<centerY) {
+        text(plot+".2", x-text_distance-20, y);
+      } else if (x<centerX && y>centerY) {
+        text(plot+".2", x-text_distance-25, y+text_distance);
+      } else {
+        text(plot+".2", x+text_distance, y+text_distance);
       } 
   }  else {
        if (x>centerX && y<centerY) {
@@ -182,8 +192,8 @@ void printData(){
 
   for(i=0; i<data.length; i++){
     dataY += 30;
-    String dataString = int(data[i][0]) + " -\t" + dates[i][0] + "\t" + data[i][1] + "\t" + data[i][3] + "\n" +
-                                       "\t \t \t" + dates[i][1] + "\t" + data[i][2] + "\t" + data[i][4]; 
+    String dataString = int(data[i][0]) + " -\t " + dates[i][0] + "\t " + data[i][1] + "\t " + data[i][3] + "\n" +
+                                       "\t \t \t " + dates[i][1] + "\t " + data[i][2] + "\t " + data[i][4]; 
     text(dataString, dataX, dataY);
   }
 }
