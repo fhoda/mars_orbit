@@ -101,78 +101,30 @@ void plotEarth() {
     float x1 = centerX + orbitalRadius*cos(radians(angle1));
     float y1 = centerY + orbitalRadius*sin(radians(angle1+180));
     fill(0, 76, 153);
-    stroke(0, 76, 153);
+//    stroke(0, 76, 153);
+    stroke(0,102,0);
     ellipse(x1, y1, earthRadius, earthRadius);
   
     // Display First Earth Point number from Kepler's data
-    printPlotNumber(plotNumber, x1, y1, "earth1");
+    printPlotNumber(plotNumber, x1, y1, angle1,"earth1");
 
   
     // Second Earth Position
     float x2 = centerX + orbitalRadius*cos(radians(angle2));
     float y2 = centerY + orbitalRadius*sin(radians(angle2+180));
     fill(0, 76, 153);
-    stroke(0, 76, 153);
+//    stroke(0, 76, 153);
+    stroke(0);
     ellipse(x2, y2, earthRadius, earthRadius);
       
     // Display Second Earth Point number from Kepler's data
-    printPlotNumber(plotNumber, x2, y2, "earth2");
+    printPlotNumber(plotNumber, x2, y2, angle2,"earth2");
 
   
     println("Eart "+plotNumber+".1 : " + x1 + "," + y1 + "\n" + "Earth "+plotNumber+".2: " + x2 + "," + y2);
     plotMars(x1, y1, x2, y2, angle1, angle2, marsAngle1, marsAngle2, plotNumber);    
   }
 }
-
-void printPlotNumber(int plot,float x, float y, String planet){
-  if(planet=="earth1"){
-    if (x>centerX && y<centerY) {
-        text(plot+".1", x+text_distance, y);
-      } else if (x<centerX && y<centerY) {
-        text(plot+".1", x-text_distance-20, y);
-      } else if (x<centerX && y>centerY) {
-        text(plot+".1", x-text_distance-25, y+text_distance);
-      } else {
-        text(plot+".1", x+text_distance, y+text_distance);
-      } 
-  }else if(planet=="earth2"){
-    if (x>centerX && y<centerY) {
-        text(plot+".2", x+text_distance, y);
-      } else if (x<centerX && y<centerY) {
-        text(plot+".2", x-text_distance-20, y);
-      } else if (x<centerX && y>centerY) {
-        text(plot+".2", x-text_distance-25, y+text_distance);
-      } else {
-        text(plot+".2", x+text_distance, y+text_distance);
-      } 
-  }  else {
-       if (x>centerX && y<centerY) {
-          text(plot, x+text_distance, y-text_distance);
-       } else if (x<centerX && y<centerY) {
-           text(plot, x-text_distance, y-text_distance);
-       } else if (x<centerX && y>centerY) {
-          text(plot, x-text_distance-10, y+text_distance);
-       } else {
-          text(plot, x+text_distance, y+text_distance);
-       }
-  }
-}
-
-void printData(){
-  fill(0);
-  stroke(0);
-  int i;
-  int dataX = 5;
-  int dataY = 5;
-
-  for(i=0; i<data.length; i++){
-    dataY += 30;
-    String dataString = int(data[i][0]) + " -\t " + dates[i][0] + "\t " + data[i][1] + "\t " + data[i][3] + "\n" +
-                                       "\t \t \t " + dates[i][1] + "\t " + data[i][2] + "\t " + data[i][4]; 
-    text(dataString, dataX, dataY);
-  }
-}
-
 
 /* Calculates and plots Mars Postion based on both earth positions given and Mars angle from Earth Position 2 */
 void plotMars(float xE1, float yE1, float xE2, float yE2, float angleE1, float angleE2, float angleM1, float angleM2, int marsPlotNumber) {
@@ -208,12 +160,92 @@ void plotMars(float xE1, float yE1, float xE2, float yE2, float angleE1, float a
   ellipse(xM, yM, 10, 10); // Mars Plot
 
   // Display Mars Point number from Kepler's data
-  printPlotNumber(marsPlotNumber, xM, yM, "mars");
+  printPlotNumber(marsPlotNumber, xM, yM, 0,"mars");
 
 
   // Add Coordinates to array for connecting eath position with a curve.
   marsCoords.append(xM); 
   marsCoords.append(yM);
+}
+
+void printData(){
+  fill(0);
+  stroke(0);
+  int i;
+  int dataX = 5;
+  int dataY = 5;
+
+  for(i=0; i<data.length; i++){
+    dataY += 30;
+    String dataString = int(data[i][0]) + " -\t " + dates[i][0] + "\t " + data[i][1] + "\t " + data[i][3] + "\n" +
+                                       "\t \t \t " + dates[i][1] + "\t " + data[i][2] + "\t " + data[i][4]; 
+    text(dataString, dataX, dataY);
+  }
+}
+
+void printPlotNumber(int plot,float x, float y, float angle,String planet){
+  // Earth Point 1
+  if(planet=="earth1"){
+    // Quadrant 1
+    if (x>centerX && y<centerY) {
+        if(angle>45 && angle<90){
+           text(plot+".1", x+text_distance, y-5);
+        } else{
+            text(plot+".1", x+text_distance, y);
+        }
+      // Quadrant 2
+      } else if (x<centerX && y<centerY) {
+        if(angle>90 && angle<136){
+           text(plot+".1", x-text_distance-10, y-10);
+        } else{
+          text(plot+".1", x-text_distance-20, y);
+        }
+      // Quadrant 3
+      } else if (x<centerX && y>centerY) {
+        text(plot+".1", x-text_distance-25, y+text_distance);
+      // Quadrant 4
+      } else {
+        text(plot+".1", x+text_distance, y+text_distance);
+      }
+  // Earth Point 2
+  }else if(planet=="earth2"){
+    // Quadrant 1
+    if (x>centerX && y<centerY) {
+       if(angle>45 && angle<90){
+           text(plot+".2", x+text_distance+5, y-11);
+        } else{
+            text(plot+".2", x+text_distance, y);
+        }
+      // Quadrant 2
+      } else if (x<centerX && y<centerY) {
+        text(plot+".2", x-text_distance-20, y);
+      // Quadrant 3
+      } else if (x<centerX && y>centerY) {
+        if(angle>235 && angle<270){
+           text(plot+".2", x-text_distance-10, y+text_distance+10);
+        } else {
+          text(plot+".2", x-text_distance-25, y+text_distance);
+        }
+      // Quadrant 4
+      } else {
+        text(plot+".2", x+text_distance, y+text_distance);
+      }
+  // Mars
+  }  else {
+      // Quadrant 1
+       if (x>centerX && y<centerY) {
+          text(plot, x+text_distance, y-text_distance);
+       // Quadrant 2
+       } else if (x<centerX && y<centerY) {
+           text(plot, x-text_distance, y-text_distance);
+       // Quadrant 3
+       } else if (x<centerX && y>centerY) {
+          text(plot, x-text_distance-10, y+text_distance+5);
+       // Quadrant 4
+       } else {
+          text(plot, x+text_distance, y+text_distance);
+       }
+  }
 }
 
 void drawCurve(){
