@@ -5,14 +5,15 @@
 
 import processing.pdf.*;
 
-float centerX; // Center of drawing
-float centerY;
+float centerX; // Center X of drawing
+float centerY; // Center Y of drawing
 float orbitalDiameter; // radius of Earth's orbit
-float orbitalRadius;
-float sunRadius = 20;
-float earthRadius = 15;
-int text_distance = 10;
+float orbitalRadius;   // radius of earth's orbit for calculating angles
+float sunRadius = 20;  // size of sun
+float earthRadius = 15; // size of earth
+int text_distance = 10; // default distance for plotNumbering from plot points
 
+// Data - Mars Plot number, Earth1 angle, Earth2 angle, Mars1 angle, Mars2 angle
 float[][] data = {
                   {1, 66.5, 22.5, 66.5, 107.0},
                   {2, 107.0, 62.5, 107.0, 144.0},
@@ -29,7 +30,8 @@ float[][] data = {
                   {13, 9.5, 327.0, 337.5, 44.5},
                   {14, 60.5, 17.0, 350.5, 56.0}
                  };
-                 
+
+// Dates for data points which are in the corresponding order as the data array.
 String[][] dates = {
                     {"11/28/1580","10/26/1582"}, 
                     {"1/7/1583","11/24/1584"},
@@ -46,7 +48,8 @@ String[][] dates = {
                     {"10/3/1593","8/20/1595"},
                     {"11/23/1593","10/10/1595"}
                   };              
-                  
+
+// Order of points to draw curve in.                  
 int[] curveOrder = {8,1,9,2,3,4,5,10,6,11,12,7,13,14};
 
 FloatList marsCoords = new FloatList(); // Store mars coordinates
@@ -70,6 +73,7 @@ void draw() {
   stroke(0);
   ellipse(centerX, centerY, orbitalDiameter, orbitalDiameter); //Earth's Orbital
 
+  // This plots all earth points and calls plotMars()
   plotEarth();
 
   // Draw the sun
@@ -86,10 +90,12 @@ void draw() {
 
 /* Calculates and plots both positions for Earth given a data set */
 void plotEarth() {
-  int i;
+  // For storing data
   float angle1, angle2, marsAngle1, marsAngle2;
   int plotNumber;
   
+  // Gather Data
+  int i;
   for(i=0; i<data.length; i++){
     plotNumber = int(data[i][0]);
     angle1 = data[i][1];
@@ -98,30 +104,31 @@ void plotEarth() {
     marsAngle2 = data[i][4];
     
     // First Earth position
-    float x1 = centerX + orbitalRadius*cos(radians(angle1));
-    float y1 = centerY + orbitalRadius*sin(radians(angle1+180));
+    float x1 = centerX + orbitalRadius*cos(radians(angle1)); // Calculate X coordinate
+    float y1 = centerY + orbitalRadius*sin(radians(angle1+180)); // Calculate Y coordinate
     fill(0, 76, 153);
 //    stroke(0, 76, 153);
     stroke(0,102,0);
-    ellipse(x1, y1, earthRadius, earthRadius);
+    ellipse(x1, y1, earthRadius, earthRadius); // Plot Earth1
   
     // Display First Earth Point number from Kepler's data
     printPlotNumber(plotNumber, x1, y1, angle1,"earth1");
 
   
     // Second Earth Position
-    float x2 = centerX + orbitalRadius*cos(radians(angle2));
-    float y2 = centerY + orbitalRadius*sin(radians(angle2+180));
+    float x2 = centerX + orbitalRadius*cos(radians(angle2)); // Calculate X coordinate
+    float y2 = centerY + orbitalRadius*sin(radians(angle2+180)); // Calculate Y coordinate
     fill(0, 76, 153);
 //    stroke(0, 76, 153);
     stroke(0);
-    ellipse(x2, y2, earthRadius, earthRadius);
+    ellipse(x2, y2, earthRadius, earthRadius); // Plot Earth2
       
     // Display Second Earth Point number from Kepler's data
     printPlotNumber(plotNumber, x2, y2, angle2,"earth2");
 
-  
+    
     println("Eart "+plotNumber+".1 : " + x1 + "," + y1 + "\n" + "Earth "+plotNumber+".2: " + x2 + "," + y2);
+    
     plotMars(x1, y1, x2, y2, angle1, angle2, marsAngle1, marsAngle2, plotNumber);    
   }
 }
@@ -168,13 +175,17 @@ void plotMars(float xE1, float yE1, float xE2, float yE2, float angleE1, float a
   marsCoords.append(yM);
 }
 
+/* Print Mars data that Kepler used */
 void printData(){
   fill(0);
   stroke(0);
-  int i;
+  
+  // Start position on drawing for printing out data
   int dataX = 5;
   int dataY = 5;
-
+  
+  // Print data on screen
+  int i;
   for(i=0; i<data.length; i++){
     dataY += 30;
     String dataString = int(data[i][0]) + " -\t " + dates[i][0] + "\t " + data[i][1] + "\t " + data[i][3] + "\n" +
@@ -183,6 +194,7 @@ void printData(){
   }
 }
 
+/* Print plot numbering */
 void printPlotNumber(int plot,float x, float y, float angle,String planet){
   // Earth Point 1
   if(planet=="earth1"){
@@ -248,12 +260,14 @@ void printPlotNumber(int plot,float x, float y, float angle,String planet){
   }
 }
 
+/* Draw curve through mars plots */
 void drawCurve(){
   // Draw Curve connecting mars plots
   noFill();
   stroke(0);
   beginShape();
   
+  // Start and end position of curve
   int curveEndX = curveOrder[0]+(curveOrder[0]-1)-1;
   int curveEndY = curveOrder[0]+(curveOrder[0]-1);
 
