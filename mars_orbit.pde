@@ -13,6 +13,14 @@ float sunRadius = 20;  // size of sun
 float earthRadius = 15; // size of earth
 int text_distance = 10; // default distance for plotNumbering from plot points
 
+// Button Dimensions and pisitions
+float demonstrateX, demonstrateY, buttonWidth=100, buttonHeight=30; // demonstrate button dimensions
+float stepByStepX, stepByStepY, stepByStepWidth;
+
+//Flags for Buttons
+boolean demonstrate = false; // track what to draw depending on condition - demonstrate or not
+boolean stepByStep = false; // flag for plotting all pionts one by one
+
 // Data - Mars Plot number, Earth1 angle, Earth2 angle, Mars1 angle, Mars2 angle
 float[][] data = {
                   {1, 66.5, 22.5, 66.5, 107.0},
@@ -68,23 +76,31 @@ void setup() {
 
 
 void draw() {
+  
+  printData();
+  
   // Draw Earth's orbital 
   fill(255);
   stroke(0);
   ellipse(centerX, centerY, orbitalDiameter, orbitalDiameter); //Earth's Orbital
-
-  // This plots all earth points and calls plotMars()
-  plotEarth();
-
+  
+  // Draw everything or a demonstration of how to make a plot.
+  if(demonstrate==true){
+    demonstration();
+  }
+  else{
+    // This plots all earth points and calls plotMars()
+    plotEarth();
+    //Draw curve going through mars orbit.
+    drawCurve();  
+  }
+  
   // Draw the sun
   fill(255, 255, 0);
   stroke(255, 255, 0);
   ellipse(centerX, centerY, sunRadius, sunRadius); // Sun
   
-  printData();
   
-  drawCurve();
-
   endRecord(); // Finish writing to PDF file
 }
 
@@ -168,6 +184,10 @@ void plotMars(float xE1, float yE1, float xE2, float yE2, float angleE1, float a
 
   // Display Mars Point number from Kepler's data
   printPlotNumber(marsPlotNumber, xM, yM, 0,"mars");
+  if(demonstrate==true){
+    line(xE1, yE1, xM, yM);
+    line(xE2, yE2, xM, yM);
+  }
 
 
   // Add Coordinates to array for connecting eath position with a curve.
@@ -192,6 +212,25 @@ void printData(){
                                        "\t \t \t " + dates[i][1] + "\t " + data[i][2] + "\t " + data[i][4]; 
     text(dataString, dataX, dataY);
   }
+  // Demonstrate button
+  demonstrateX = dataX+5;
+  demonstrateY = dataY + 30;
+  rect(demonstrateX, demonstrateY, buttonWidth, buttonHeight);
+  stroke(255);
+  fill(255);
+  text("Demonstrate", demonstrateX+10, demonstrateY+20);
+  
+  // Plot Step By Step button
+  stepByStepX = dataX+5;
+  stepByStepY = demonstrateY+buttonHeight + 20;
+  stepByStepWidth = buttonWidth+50;
+  stroke(0);
+  fill(0);
+  rect(stepByStepX, stepByStepY, stepByStepWidth, buttonHeight);
+  stroke(255);
+  fill(255);
+  text("Plot data one at a time", stepByStepX+10, stepByStepY+20);
+  
 }
 
 /* Print plot numbering */
@@ -285,5 +324,72 @@ void drawCurve(){
   curveVertex(marsCoords.get(curveEndX), marsCoords.get(curveEndY));
 
   endShape();
+}
+
+// Check if the domonstrate button is clicked
+void mousePressed(){
+  if(mouseY>=demonstrateY && mouseY<=demonstrateY+buttonHeight && mouseX>=demonstrateX && mouseX<=demonstrateX+buttonWidth){
+    demonstrate = true;
+  }
+  else{
+    demonstrate = false;
+  }
+  background(255);
+  redraw();
+}
+
+
+/* Shows demonstrates how two points would have been plotted by kepler - One in opposition and the other not in opposition */
+void demonstration() {
+  // For storing data
+  float angle1, angle2, marsAngle1, marsAngle2;
+  int plotNumber;
+  
+  // Gather Data
+  int i;
+  for(i=0; i<data.length; i+=9){
+    plotNumber = int(data[i][0]);
+    angle1 = data[i][1];
+    angle2 = data[i][2];
+    marsAngle1 = data[i][3];
+    marsAngle2 = data[i][4];
+    
+    // First Earth position
+    float x1 = centerX + orbitalRadius*cos(radians(angle1)); // Calculate X coordinate
+    float y1 = centerY + orbitalRadius*sin(radians(angle1+180)); // Calculate Y coordinate
+    fill(0, 76, 153);
+    stroke(0,102,0);
+    ellipse(x1, y1, earthRadius, earthRadius); // Plot Earth1
+  
+    // Display First Earth Point number from Kepler's data
+    printPlotNumber(plotNumber, x1, y1, angle1,"earth1");
+
+  
+    // Second Earth Position
+    float x2 = centerX + orbitalRadius*cos(radians(angle2)); // Calculate X coordinate
+    float y2 = centerY + orbitalRadius*sin(radians(angle2+180)); // Calculate Y coordinate
+    fill(0, 76, 153);
+    stroke(0);
+    ellipse(x2, y2, earthRadius, earthRadius); // Plot Earth2
+      
+    // Display Second Earth Point number from Kepler's data
+    printPlotNumber(plotNumber, x2, y2, angle2,"earth2");
+
+    
+    println("Eart "+plotNumber+".1 : " + x1 + "," + y1 + "\n" + "Earth "+plotNumber+".2: " + x2 + "," + y2);
+    
+    // Lines from earth to mars point
+    line(x1-15, y1, x1+15, y1);
+    line(x1, y1-15, x1, y1+15);
+    line(x2-15, y2, x2+15, y2);
+    line(x2, y2-15, x2, y2+15);
+
+    
+    plotMars(x1, y1, x2, y2, angle1, angle2, marsAngle1, marsAngle2, plotNumber);    
+  }
+}
+
+void stepByStep(){
+  
 }
 
