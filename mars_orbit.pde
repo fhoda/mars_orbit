@@ -363,6 +363,11 @@ void mousePressed(){
 
 /* Demonstrates how two points would have been plotted by kepler - One in opposition and the other not in opposition */
 void demonstration() {
+ 
+  // X&Y access with sun as origin
+  line(centerX-orbitalRadius-20, centerY, centerX+orbitalRadius+20, centerY);
+  line(centerX, centerY+orbitalRadius+20, centerX, centerY-orbitalRadius-20);
+  
   // For storing data
   float angle1, angle2, marsAngle1, marsAngle2;
   int plotNumber;
